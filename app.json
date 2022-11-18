@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "memoriza2",
-    "slug": "memoriza2",
+    "name": "MemoQue?",
+    "slug": "MemoQue",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#557153"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,13 +21,20 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.chardev.memoque",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#557153"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cac4b0ff-f438-4abb-a92d-2a3f8ff957cd"
+      }
     }
   }
 }
