@@ -5,8 +5,9 @@ import Card from './src/components/Card';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import TitleMQ from './src/components/TitleMQ';
 
-
+// cartas de animales
 const cards = [
   "​🐵",
   "🐶​",
@@ -18,6 +19,7 @@ const cards = [
   "🐮​"
 ]
 
+// barajar arreglo de cartas
 const shuffle = (array:string[]) => {
   for (let i = array.length -1; i > 0; i--) {
     const randomIndex = Math.floor(Math.random() * (i+1));
@@ -32,6 +34,7 @@ const shuffle = (array:string[]) => {
 
 export default function App() {
 
+  // fuente Josefin
     const [fontsLoaded] = useFonts({
     'J-light': require('./assets/fonts/JosefinSans-Light.ttf'),
     'J-medium': require('./assets/fonts/JosefinSans-Medium.ttf'),
@@ -59,8 +62,7 @@ export default function App() {
     }
   }, [selectedCards])
   
-
-   useEffect(() => {
+   useEffect(() => { // espera que carga todo para quitar el splash
     async function prepare() {
       await SplashScreen.preventAutoHideAsync();
     }
@@ -73,41 +75,41 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // verifica si carga la fuente
+  if (!fontsLoaded) { return null; }
 
 
+  // controla cuando toca la carta
   const handleTapCard = (i:any) => {
+
+    let win = didPlayerWin();
+    if(!win){ // si todavia no gano segui contando.. 
       if(selectedCards.length >= 2 || selectedCards.includes(i)) return;
       setSelectedCards([...selectedCards, i]);
       setScore(score+1)
+    }
   }
 
+  // reinicia el juego
   const resetGame = () => {
     setMatchedCards([]);
     setScore(0);
     setSelectedCards([]);
   }
 
+  //  verifica si ya hizo match con todas las cartas, osea, gano
   const didPlayerWin = () => matchedCards.length === board.length
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      
-   
-      <Text style={styles.title}>
-        <Text style={{ color: '#E6E5A3'}}>M</Text>
-        EMO
-        <Text style={{ color: '#E6E5A3'}}>Q</Text> 
-        UE
-        <Text style={{ color: '#E6E5A3'}}>?</Text>
-      </Text>
+      <StatusBar style="light" />
+      <TitleMQ />
       {
+        /* SI GANA */
         didPlayerWin() && ( 
         <>        
-        <ConfettiCannon count={200} fallSpeed={2000} origin={{x: -10, y: 0}} autoStart={true} />
-        <Text style={styles.textWin}>FELICITACIONES GANASTE!</Text>
+          <ConfettiCannon count={200} fallSpeed={2000} origin={{x: -10, y: 0}} autoStart={true} />
+          <Text style={styles.textWin}>FELICITACIONES GANASTE!</Text>
         </>
 
         )
@@ -118,23 +120,20 @@ export default function App() {
           board.map( (card, i) => {
             const isTurnedOver = selectedCards.includes(i) || matchedCards.includes(i)
             return (
-              <Card 
-                key={i}
-                isTurnedOver={isTurnedOver}
-                onPress={() => handleTapCard(i)}
-              >
+              <Card key={i} isTurnedOver={isTurnedOver} onPress={() => handleTapCard(i)}>
                 {card}
-                </Card>
+              </Card>
             )
           })
         }
       </View>
-<Text style={styles.textMoves}>Movimientos: { score } </Text>
+
+      <Text style={styles.textMoves}>Movimientos: { score } </Text>
+
       <TouchableOpacity style={styles.btnReset} onPress={resetGame} >
         <Text style={styles.textBtnReset}>REINICIAR JUEGO</Text>
       </TouchableOpacity>
       
-      <StatusBar style="light" />
     </View>
   );
 }
@@ -145,12 +144,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#557153',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title:{
-    fontSize: 32,
-    color: 'white',
-    marginBottom: 20,
-    fontFamily: 'J-bold'
   },
   containerBoard:{
     flexDirection: 'row', // poner en horinzotal
