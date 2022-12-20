@@ -49,6 +49,7 @@ export default function App() {
   const [selectedCards, setSelectedCards] = useState<any[]>([]);
   const [matchedCards, setMatchedCards] = useState<any[]>([]);
   const [score, setScore] = useState(0);
+  const [showReset, setShowReset] = useState(false)
 
   // useEffects
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function App() {
       setMatchedCards([...matchedCards, ...selectedCards])
       setSelectedCards([])
     }else{
-      const time = setTimeout(()=> setSelectedCards([]) ,1000);
+      const time = setTimeout(()=> setSelectedCards([]) ,800);
       return () => clearTimeout(time)
     }
   }, [selectedCards])
@@ -92,6 +93,7 @@ export default function App() {
 
   // reinicia el juego
   const resetGame = () => {
+    setShowReset(false)
     setMatchedCards([]);
     setScore(0);
     setSelectedCards([]);
@@ -108,7 +110,13 @@ export default function App() {
         /* SI GANA */
         didPlayerWin() && ( 
         <>        
-          <ConfettiCannon count={200} fallSpeed={2000} origin={{x: -10, y: 0}} autoStart={true} />
+          <ConfettiCannon 
+          count={200} 
+          fallSpeed={2000} 
+          origin={{x: -10, y: 0}} 
+          autoStart={true} 
+          onAnimationEnd={ () => setShowReset(true)}
+          />
           <Text style={styles.textWin}>FELICITACIONES GANASTE!</Text>
         </>
 
@@ -129,10 +137,15 @@ export default function App() {
       </View>
 
       <Text style={styles.textMoves}>Movimientos: { score } </Text>
-
+      {
+        /* SI GANA PERMITO REINICIAR EL JUEGO */
+        showReset && ( 
       <TouchableOpacity style={styles.btnReset} onPress={resetGame} >
         <Text style={styles.textBtnReset}>REINICIAR JUEGO</Text>
       </TouchableOpacity>
+        )
+      }
+
       
     </View>
   );
